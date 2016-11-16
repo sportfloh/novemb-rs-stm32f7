@@ -33,3 +33,7 @@
 -  go back to your first terminal
 -  run `sh gdb.sh`
 -  The code has now been flashed and is ready to run. Type `c` (for `continue`) and observe your controller.
+
+# Generate Documentation
+
+`cargo doc --open --target x86_64-unknown-linux-gnu`
