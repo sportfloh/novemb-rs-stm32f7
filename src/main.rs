@@ -11,7 +11,7 @@ extern crate svd_board;
 // initialization routines for .data and .bss
 extern crate r0;
 
-use stm32f7::{gpio, system_clock, sdram, lcd, i2c, audio};
+use stm32f7::{gpio, system_clock, sdram, lcd, i2c, audio, touch};
 use svd_board::Hardware;
 
 #[no_mangle]
@@ -58,6 +58,7 @@ fn main(hw: Hardware) -> ! {
                    gpioj,
                    gpiok,
                    i2c3,
+                   i2c4,
                    sai2,
                    .. } = hw;
 
@@ -113,7 +114,16 @@ fn main(hw: Hardware) -> ! {
     lcd.clear_screen();
     lcd.test_pixels();
 
-    // i2c
+    // i2c for touch screen
+    i2c::init_pins_and_clocks(rcc, &mut gpio);
+    let mut i2c_4 = i2c::init(i2c4);
+    i2c_4.test_1();
+    i2c_4.test_2();
+
+    // touch screen
+    assert!(touch::init_ft6x06(&mut i2c_4).is_ok());
+
+    // i2c for audio
     i2c::init_pins_and_clocks(rcc, &mut gpio);
     let mut i2c_3 = i2c::init(i2c3);
     i2c_3.test_1();
@@ -161,6 +171,6 @@ fn main(hw: Hardware) -> ! {
 }
 
 #[lang = "panic_fmt"]
-extern "C" fn panic_fmt(_: core::fmt::Arguments, _: &'static str, _: u32) -> ! {
+extern "C" fn panic_fmt(_args: core::fmt::Arguments, _: &'static str, _: u32) -> ! {
     loop {}
 }

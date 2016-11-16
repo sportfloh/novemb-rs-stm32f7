@@ -6,7 +6,7 @@ use gpio::{self, GpioController};
 
 pub struct I2C(&'static mut I2c1);
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Eq)]
 pub enum Error {
     Nack,
 }

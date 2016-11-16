@@ -9,7 +9,7 @@ const WM8994_ADDRESS: i2c::Address = i2c::Address::bits_7(0b0011010);
 
 pub fn init_wm8994(i2c_3: &mut i2c::I2C) -> Result<(), i2c::Error> {
     // read and check device family ID
-    assert_eq!(i2c_3.read(WM8994_ADDRESS, 0).ok(), Some(0x8994));
+    assert_eq!(i2c_3.read(WM8994_ADDRESS, 0), Ok(0x8994));
     // reset device
     try!(i2c_3.write(WM8994_ADDRESS, 0, 0));
 
